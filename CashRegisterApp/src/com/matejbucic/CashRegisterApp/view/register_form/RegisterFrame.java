@@ -1,6 +1,7 @@
 package com.matejbucic.CashRegisterApp.view.register_form;
 
 import com.matejbucic.CashRegisterApp.controller.Controller;
+import com.matejbucic.CashRegisterApp.model.Waiter;
 import com.matejbucic.CashRegisterApp.model.listeners.RegisterFormListener;
 import com.matejbucic.CashRegisterApp.view.login_form.LoginFrame;
 import com.matejbucic.CashRegisterApp.view.register_form.panel.DataInputPanel;
@@ -25,6 +26,7 @@ public class RegisterFrame extends JFrame {
         setSize(650, 450);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
     }
 
     private void activatePanels() {
@@ -37,7 +39,15 @@ public class RegisterFrame extends JFrame {
 
             @Override
             public void submit() {
-                JOptionPane.showMessageDialog(null, "Submit button pressed!");
+                String name = dataInputPanel.getNameField().getText();
+                String surname = dataInputPanel.getSurnameField().getText();
+                String password = new String(dataInputPanel.getPasswordField().getPassword());
+                String repPassword = new String(dataInputPanel.getRepeatPasswordField().getPassword());
+                if (controller.checkIsRegistrationValid(name, surname, password, repPassword)) {
+                    controller.addWaiter(new Waiter(name, surname, password));
+                    dispose();
+                    new LoginFrame();
+                }
             }
         });
     }

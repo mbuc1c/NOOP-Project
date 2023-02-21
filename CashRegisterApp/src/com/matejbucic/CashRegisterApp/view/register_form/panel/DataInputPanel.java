@@ -13,7 +13,6 @@ public class DataInputPanel extends JPanel {
     private JLabel nameLabel, surnameLabel, passwordLabel, repeatPasswordLabel, instructionLabel;
 
     public DataInputPanel() {
-//        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         initComponents();
         layoutComponents();
 

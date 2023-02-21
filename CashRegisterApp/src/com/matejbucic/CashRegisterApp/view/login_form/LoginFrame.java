@@ -1,6 +1,7 @@
 package com.matejbucic.CashRegisterApp.view.login_form;
 
 import com.matejbucic.CashRegisterApp.controller.Controller;
+import com.matejbucic.CashRegisterApp.model.Waiter;
 import com.matejbucic.CashRegisterApp.model.listeners.LoginFormListener;
 import com.matejbucic.CashRegisterApp.view.login_form.panel.InputPanel;
 import com.matejbucic.CashRegisterApp.view.login_form.panel.KeyBoardPanel;
@@ -28,6 +29,7 @@ public class LoginFrame extends JFrame {
         setSize(400, 650);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
     }
 
     private void setShortcut() {
@@ -60,11 +62,12 @@ public class LoginFrame extends JFrame {
             public void submit() {
                 String password = new String(inputPanel.getPasswordField().getPassword());
                 if (controller.loginValid(password)) {
-                    System.out.println(password);
-                    JOptionPane.showMessageDialog(null, "Login Success!");
+                    Waiter waiter = controller.getWaiterWithPassword(password);
+                    clear();
+                    JOptionPane.showMessageDialog(null,
+                            "Login Success!\nWelcome " + waiter.getName() + " " + waiter.getSurname() + "!");
                 } else {
                     clear();
-                    JOptionPane.showMessageDialog(null, "Login Fail!");
                 }
             }
         });
