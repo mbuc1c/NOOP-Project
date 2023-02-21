@@ -4,11 +4,12 @@ import com.matejbucic.CashRegisterApp.controller.Controller;
 import com.matejbucic.CashRegisterApp.model.listeners.LoginFormListener;
 import com.matejbucic.CashRegisterApp.view.login_form.panel.InputPanel;
 import com.matejbucic.CashRegisterApp.view.login_form.panel.KeyBoardPanel;
+import com.matejbucic.CashRegisterApp.view.register_form.RegisterFrame;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Arrays;
+import java.awt.event.KeyEvent;
 
 public class LoginFrame extends JFrame {
 
@@ -21,11 +22,26 @@ public class LoginFrame extends JFrame {
         initComponents();
         layoutComponents();
         activatePanels();
+        setShortcut();
 
         setVisible(true);
         setSize(400, 650);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+    }
+
+    private void setShortcut() {
+        // Set up the shortcut
+        getRootPane().getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK), "newFrame");
+        getRootPane().getActionMap().put("newFrame", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+                // Create a new frame
+                dispose();
+                RegisterFrame registerFrame = new RegisterFrame();
+                registerFrame.setLocation(getX() + 25, getY() + 25);
+                registerFrame.setVisible(true);
+            }
+        });
     }
 
     private void activatePanels() {
