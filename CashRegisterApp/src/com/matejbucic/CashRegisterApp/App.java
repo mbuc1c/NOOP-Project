@@ -2,6 +2,7 @@ package com.matejbucic.CashRegisterApp;
 
 import com.matejbucic.CashRegisterApp.model.Database;
 import com.matejbucic.CashRegisterApp.model.Waiter;
+import com.matejbucic.CashRegisterApp.view.cash_register.CashRegisterFrame;
 import com.matejbucic.CashRegisterApp.view.login_form.LoginFrame;
 
 import javax.swing.*;

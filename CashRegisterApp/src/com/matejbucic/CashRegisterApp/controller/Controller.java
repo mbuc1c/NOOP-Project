@@ -2,6 +2,8 @@ package com.matejbucic.CashRegisterApp.controller;
 
 import com.matejbucic.CashRegisterApp.model.Database;
 import com.matejbucic.CashRegisterApp.model.Waiter;
+import com.matejbucic.CashRegisterApp.view.cash_register.CashRegisterFrame;
+import com.matejbucic.CashRegisterApp.view.login_form.LoginFrame;
 
 import javax.swing.*;
 
@@ -22,7 +24,7 @@ public class Controller {
         passwordField.setText("");
     }
 
-    public boolean loginValid(String password) {
+    public boolean isLoginValid(String password) {
         // currently for testing purposes
         if (!database.checkIfValid(password)) {
             JOptionPane.showMessageDialog(null, "Incorrect password!");
@@ -33,10 +35,6 @@ public class Controller {
 
     public Waiter getWaiterWithPassword(String password) {
         return database.getWaiterWithPassword(password);
-    }
-
-    public void login() {
-
     }
 
     public boolean checkIsRegistrationValid(String name, String surname, String password, String repPassword) {
@@ -74,5 +72,16 @@ public class Controller {
 
     public void addWaiter(Waiter waiter) {
         database.addWaiterToDatabase(waiter);
+    }
+
+    public void openCashRegister(Waiter waiter) {
+        CashRegisterFrame cashRegisterFrame = new CashRegisterFrame();
+        cashRegisterFrame.setWaiter(waiter);
+        cashRegisterFrame.getInformationPanel().getWaiter()
+                .setText(waiter.getName() + " " + waiter.getSurname() + " (id: " + waiter.getId() + ")");
+    }
+
+    public void logOut() {
+        new LoginFrame();
     }
 }

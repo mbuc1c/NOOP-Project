@@ -15,14 +15,6 @@ public class Database {
     public static ArrayList<Waiter> waiters;
 
     public Database() {
-//        generateWaiters();
-    }
-
-    private void generateWaiters() {
-        waiters = new ArrayList<>();
-        waiters.add(new Waiter("Frane", "Franic", "1111"));
-        waiters.add(new Waiter("Krone", "Cicanocic", "2222"));
-        waiters.add(new Waiter("Alojzije", "Cetkovic", "1234"));
     }
 
     public boolean checkIfValid(String password) {

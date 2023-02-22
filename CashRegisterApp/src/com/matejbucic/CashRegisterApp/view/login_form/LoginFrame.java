@@ -3,6 +3,7 @@ package com.matejbucic.CashRegisterApp.view.login_form;
 import com.matejbucic.CashRegisterApp.controller.Controller;
 import com.matejbucic.CashRegisterApp.model.Waiter;
 import com.matejbucic.CashRegisterApp.model.listeners.LoginFormListener;
+import com.matejbucic.CashRegisterApp.view.cash_register.CashRegisterFrame;
 import com.matejbucic.CashRegisterApp.view.login_form.panel.InputPanel;
 import com.matejbucic.CashRegisterApp.view.login_form.panel.KeyBoardPanel;
 import com.matejbucic.CashRegisterApp.view.register_form.RegisterFrame;
@@ -61,11 +62,10 @@ public class LoginFrame extends JFrame {
             @Override
             public void submit() {
                 String password = new String(inputPanel.getPasswordField().getPassword());
-                if (controller.loginValid(password)) {
+                if (controller.isLoginValid(password)) {
                     Waiter waiter = controller.getWaiterWithPassword(password);
-                    clear();
-                    JOptionPane.showMessageDialog(null,
-                            "Login Success!\nWelcome " + waiter.getName() + " " + waiter.getSurname() + "!");
+                    controller.openCashRegister(waiter);
+                    dispose();
                 } else {
                     clear();
                 }
