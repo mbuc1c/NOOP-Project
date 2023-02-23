@@ -1,11 +1,14 @@
 package com.matejbucic.CashRegisterApp.controller;
 
+import com.matejbucic.CashRegisterApp.model.Bill;
 import com.matejbucic.CashRegisterApp.model.Database;
 import com.matejbucic.CashRegisterApp.model.Waiter;
+import com.matejbucic.CashRegisterApp.model.drinks.Drink;
 import com.matejbucic.CashRegisterApp.view.cash_register.CashRegisterFrame;
 import com.matejbucic.CashRegisterApp.view.login_form.LoginFrame;
 
 import javax.swing.*;
+import java.util.HashMap;
 
 public class Controller {
 
@@ -83,5 +86,21 @@ public class Controller {
 
     public void logOut() {
         new LoginFrame();
+    }
+
+    public void addDrinkToBill(Waiter waiter, Drink drink, Bill bill, JLabel total) {
+        if (bill.getWaiter() == null) {
+            bill.setWaiter(waiter);
+        }
+        if (!bill.getDrinks().containsKey(drink)) {
+            bill.getDrinks().put(drink, 1);
+        } else {
+            bill.getDrinks().put(drink, bill.getDrinks().get(drink) + 1);
+        }
+
+        double totalPrice = bill.getTotalPrice() + drink.getDrinkPrice();
+        bill.setTotalPrice(totalPrice);
+
+        total.setText("Total: " + bill.getTotalPrice() + " \u20AC");
     }
 }

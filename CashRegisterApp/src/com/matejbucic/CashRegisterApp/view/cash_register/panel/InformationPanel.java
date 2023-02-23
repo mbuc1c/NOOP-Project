@@ -39,20 +39,25 @@ public class InformationPanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(10, 5, 10, 0);
         add(waiter, gbc);
 
         gbc.gridx++;
+        gbc.insets = new Insets(10, 5, 10, 1200);
         add(allBills, gbc);
 
-        gbc.gridx++;
-        gbc.insets = new Insets(10, 5, 10, 5);
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(10, 5, 10, 20);
         add(logOut, gbc);
     }
 
     private void initComponents() {
         waiter = new JLabel();
+        waiter.setFont(new Font("Arial", Font.BOLD, 24));
         logOut = new JButton("Log out");
+        logOut.setPreferredSize(new Dimension(150, 50));
         allBills = new JButton("All bills");
+        allBills.setPreferredSize(new Dimension(150, 50));
     }
 }

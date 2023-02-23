@@ -1,6 +1,9 @@
 package com.matejbucic.CashRegisterApp.view.cash_register.panel;
 
 import com.matejbucic.CashRegisterApp.model.drinks.Drink;
+import com.matejbucic.CashRegisterApp.model.listeners.DrinksListener;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,19 +14,26 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 
+@Getter
+@Setter
 public class DrinksPanel extends JPanel {
 
-    private HashMap<JButton, Drink> drinks; // = new HashMap<>(){{
-//        put(new JButton("Coffee"), new Coffee());
-//        put(new JButton("Coffee"), new Coffee());
-//        put(new JButton("Coffee"), new Coffee());
-//        put(new JButton("Coffee"), new Coffee());
-//    }};
+    private HashMap<JButton, Drink> drinks;
+    private DrinksListener listener;
 
     public DrinksPanel() {
         setLayout(new GridLayout(0, 2));
         fillDrinks("com.matejbucic.CashRegisterApp.model.drinks.concrete");
         layoutComponents();
+        activateComponents();
+    }
+
+    private void activateComponents() {
+        for (JButton button : drinks.keySet()) {
+            button.addActionListener(e -> {
+                listener.addDrink(e);
+            });
+        }
     }
 
     private void layoutComponents() {
@@ -89,12 +99,6 @@ public class DrinksPanel extends JPanel {
 
                                     // Add the JButton and Drink to the HashMap
                                     drinks.put(button, drink);
-
-                                    // TODO: Create method that will activate each button with listener!
-                                    button.addActionListener(e -> {
-                                        // Add your event handling code here
-                                        System.out.println(drinks.get(button).toString());
-                                    });
                                 }
                             } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException |
                                      InvocationTargetException ex) {

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/com/matejbucic/CashRegisterApp/App.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/com/matejbucic/CashRegisterApp/view/cash_register/panel/InformationPanel.java" charset="US-ASCII" />
+  </component>
+</project>

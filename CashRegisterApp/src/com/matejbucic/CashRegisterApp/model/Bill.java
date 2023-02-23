@@ -2,31 +2,24 @@ package com.matejbucic.CashRegisterApp.model;
 
 import com.matejbucic.CashRegisterApp.model.drinks.Drink;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+import java.util.Date;
 import java.util.HashMap;
 
 @Getter
+@Setter
+@ToString
 public class Bill {
 
     private HashMap<Drink, Integer> drinks;
-    private double totalPrice;
+    private double totalPrice = 0;
+    private Waiter waiter;
+    private Date date;
 
-    private Bill() {
+
+    public Bill() {
         drinks = new HashMap<>();
-    }
-
-    public void addDrink(Drink drink) {
-        if (!drinks.containsKey(drink)) {
-            drinks.put(drink, 1);
-        } else {
-            drinks.put(drink, drinks.get(drink) + 1);
-        }
-        updateTotalPrice();
-    }
-
-    private void updateTotalPrice() {
-        for (Drink drink : drinks.keySet()) {
-            totalPrice += drink.getDrinkPrice() * drinks.get(drink);
-        }
     }
 }
