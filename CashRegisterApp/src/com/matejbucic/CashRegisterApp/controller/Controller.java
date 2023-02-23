@@ -8,7 +8,8 @@ import com.matejbucic.CashRegisterApp.view.cash_register.CashRegisterFrame;
 import com.matejbucic.CashRegisterApp.view.login_form.LoginFrame;
 
 import javax.swing.*;
-import java.util.HashMap;
+import javax.swing.table.DefaultTableModel;
+import java.util.Set;
 
 public class Controller {
 
@@ -64,7 +65,7 @@ public class Controller {
         } else return true;
     }
 
-    private static boolean isPasswordOnlyDigits(String str) {
+    private boolean isPasswordOnlyDigits(String str) {
         for (int i = 0; i < str.length(); i++) {
             if (!Character.isDigit(str.charAt(i))) {
                 return false;
@@ -88,7 +89,8 @@ public class Controller {
         new LoginFrame();
     }
 
-    public void addDrinkToBill(Waiter waiter, Drink drink, Bill bill, JLabel total) {
+    public void addDrinkToBill(Waiter waiter, Drink drink, Bill bill) {
+        // TODO: when pressing checkout setWaiter
         if (bill.getWaiter() == null) {
             bill.setWaiter(waiter);
         }
@@ -100,7 +102,51 @@ public class Controller {
 
         double totalPrice = bill.getTotalPrice() + drink.getDrinkPrice();
         bill.setTotalPrice(totalPrice);
+    }
 
-        total.setText("Total: " + bill.getTotalPrice() + " \u20AC");
+    public void removeDrink(Drink drink, Bill bill) {
+        if (bill.getDrinks().get(drink) == 1) {
+            bill.getDrinks().remove(drink);
+        } else {
+            bill.getDrinks().put(drink, bill.getDrinks().get(drink) - 1);
+        }
+
+        double totalPrice = bill.getTotalPrice() - drink.getDrinkPrice();
+        bill.setTotalPrice(totalPrice);
+    }
+
+    public void clearAll(Bill bill) {
+        bill.getDrinks().clear();
+        bill.setTotalPrice(0.0);
+    }
+
+    public void updateBillTable(Bill bill, DefaultTableModel model, JLabel total) {
+        String[] columnIdentifiers = new String[model.getColumnCount()];
+        String[][] billData = new String[bill.getDrinks().size()][model.getColumnCount()];
+
+        for (int i = 0; i < columnIdentifiers.length; i++) {
+            columnIdentifiers[i] = model.getColumnName(i);
+        }
+
+        int r = 0;
+        for (Drink drink : bill.getDrinks().keySet()) {
+            int amount = bill.getDrinks().get(drink);
+            double drinkPrice = drink.getDrinkPrice();
+
+            billData[r][0] = drink.getClass().getSimpleName();
+            billData[r][1] = String.valueOf(amount);
+            billData[r][2] = String.valueOf(drinkPrice);
+            billData[r][3] = String.valueOf(drinkPrice * amount);
+            r++;
+        }
+
+        model.setDataVector(billData, columnIdentifiers);
+        total.setText("Total: " + String.format("%.2f", bill.getTotalPrice()) + " \u20AC");
+    }
+
+    public Drink getSelectedDrink(int selectedRow, Bill bill) {
+        Set<Drink> keySet = bill.getDrinks().keySet();
+        Drink[] keyArray = keySet.toArray(new Drink[keySet.size()]);
+        return keyArray[selectedRow];
     }
 }

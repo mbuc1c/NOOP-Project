@@ -7,19 +7,20 @@ import lombok.ToString;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 @Getter
 @Setter
 @ToString
 public class Bill {
 
-    private HashMap<Drink, Integer> drinks;
+    private LinkedHashMap<Drink, Integer> drinks;
     private double totalPrice = 0;
     private Waiter waiter;
     private Date date;
 
 
     public Bill() {
-        drinks = new HashMap<>();
+        drinks = new LinkedHashMap<>();
     }
 }

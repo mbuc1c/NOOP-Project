@@ -1,7 +1,7 @@
 package com.matejbucic.CashRegisterApp.view.cash_register.panel;
 
 import com.matejbucic.CashRegisterApp.model.drinks.Drink;
-import com.matejbucic.CashRegisterApp.model.listeners.DrinksListener;
+import com.matejbucic.CashRegisterApp.model.listeners.DrinksPanelListener;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,14 +12,14 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 @Getter
 @Setter
 public class DrinksPanel extends JPanel {
 
-    private HashMap<JButton, Drink> drinks;
-    private DrinksListener listener;
+    private LinkedHashMap<JButton, Drink> drinks;
+    private DrinksPanelListener listener;
 
     public DrinksPanel() {
         setLayout(new GridLayout(0, 2));
@@ -29,8 +29,8 @@ public class DrinksPanel extends JPanel {
     }
 
     private void activateComponents() {
-        for (JButton button : drinks.keySet()) {
-            button.addActionListener(e -> {
+        for (JButton drinkButton : drinks.keySet()) {
+            drinkButton.addActionListener(e -> {
                 listener.addDrink(e);
             });
         }
@@ -53,7 +53,7 @@ public class DrinksPanel extends JPanel {
      */
     public void fillDrinks(String packageName) {
         // Create a new HashMap to store drinks
-        drinks = new HashMap<>();
+        drinks = new LinkedHashMap<>();
 
         // Get the current class loader
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -96,6 +96,9 @@ public class DrinksPanel extends JPanel {
 
                                     // Create a new JButton with the drink's name and add an ActionListener
                                     JButton button = new JButton(drink.getClass().getSimpleName());
+
+                                    // Set font to button
+                                    button.setFont(new Font(Font.DIALOG, Font.BOLD, 36));
 
                                     // Add the JButton and Drink to the HashMap
                                     drinks.put(button, drink);

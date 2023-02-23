@@ -54,7 +54,7 @@ public class InformationPanel extends JPanel {
 
     private void initComponents() {
         waiter = new JLabel();
-        waiter.setFont(new Font("Arial", Font.BOLD, 24));
+        waiter.setFont(new Font("Arial", Font.BOLD, 36));
         logOut = new JButton("Log out");
         logOut.setPreferredSize(new Dimension(150, 50));
         allBills = new JButton("All bills");

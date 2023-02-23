@@ -1,5 +1,6 @@
 package com.matejbucic.CashRegisterApp.view.cash_register.panel;
 
+import com.matejbucic.CashRegisterApp.model.listeners.CommandsPanelListener;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,10 +12,26 @@ import java.awt.*;
 public class CommandsPanel extends JPanel {
 
     private JButton clearAll, deduct, checkout;
+    private CommandsPanelListener listener;
 
     public CommandsPanel() {
         initComponents();
         layoutComponents();
+        activateComponents();
+    }
+
+    private void activateComponents() {
+        clearAll.addActionListener(e -> {
+            listener.clearAll();
+        });
+
+        deduct.addActionListener(e -> {
+            listener.deduct();
+        });
+
+        checkout.addActionListener(e -> {
+            listener.checkout();
+        });
     }
 
     private void layoutComponents() {

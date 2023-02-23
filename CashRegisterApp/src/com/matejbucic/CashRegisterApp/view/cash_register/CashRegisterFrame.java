@@ -3,12 +3,14 @@ package com.matejbucic.CashRegisterApp.view.cash_register;
 import com.matejbucic.CashRegisterApp.controller.Controller;
 import com.matejbucic.CashRegisterApp.model.Bill;
 import com.matejbucic.CashRegisterApp.model.Waiter;
-import com.matejbucic.CashRegisterApp.model.listeners.DrinksListener;
+import com.matejbucic.CashRegisterApp.model.drinks.Drink;
+import com.matejbucic.CashRegisterApp.model.listeners.CommandsPanelListener;
+import com.matejbucic.CashRegisterApp.model.listeners.DrinksPanelListener;
 import com.matejbucic.CashRegisterApp.model.listeners.InformationPanelListener;
 import com.matejbucic.CashRegisterApp.view.cash_register.panel.BillCommandsPanel;
-import com.matejbucic.CashRegisterApp.view.cash_register.panel.BillPanel;
 import com.matejbucic.CashRegisterApp.view.cash_register.panel.DrinksPanel;
 import com.matejbucic.CashRegisterApp.view.cash_register.panel.InformationPanel;
+import com.matejbucic.CashRegisterApp.view.login_form.LoginFrame;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +18,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-// TODO: line 50
 @Getter
 @Setter
 public class CashRegisterFrame extends JFrame {
@@ -46,15 +47,56 @@ public class CashRegisterFrame extends JFrame {
     private void activatePanels() {
         activateInformationPanel();
         activateDrinksPanel();
+        activateCommandsPanel();
 
     }
 
+    private void activateCommandsPanel() {
+        billCommandsPanel.getCommandsPanel().setListener(new CommandsPanelListener() {
+            @Override
+            public void clearAll() {
+                controller.clearAll(bill);
+                controller.updateBillTable(bill, billCommandsPanel.getBillPanel().getModel(), billCommandsPanel.getBillPanel().getTotal());
+
+                JTable table = billCommandsPanel.getBillPanel().getTable();
+                int tablePreferredWidth = billCommandsPanel.getBillPanel().getScrollPane().getPreferredSize().width;
+                billCommandsPanel.getBillPanel().setJTableColumnsWidth(table,tablePreferredWidth, 52, 16, 16, 16);
+            }
+
+            @Override
+            public void deduct() {
+                int selectedRow = billCommandsPanel.getBillPanel().getTable().getSelectedRow();
+                if (selectedRow != -1) {
+                    Drink selectedDrink = controller.getSelectedDrink(selectedRow, bill);
+                    controller.removeDrink(selectedDrink, bill);
+                    controller.updateBillTable(bill, billCommandsPanel.getBillPanel().getModel(), billCommandsPanel.getBillPanel().getTotal());
+
+                    JTable table = billCommandsPanel.getBillPanel().getTable();
+                    int tablePreferredWidth = billCommandsPanel.getBillPanel().getScrollPane().getPreferredSize().width;
+                    billCommandsPanel.getBillPanel().setJTableColumnsWidth(table,tablePreferredWidth, 52, 16, 16, 16);
+                }
+            }
+
+            @Override
+            public void checkout() {
+                System.out.println(bill.toString());
+                dispose();
+                new LoginFrame();
+            }
+        });
+    }
+
     private void activateDrinksPanel() {
-        drinksPanel.setListener(new DrinksListener() {
+        drinksPanel.setListener(new DrinksPanelListener() {
             @Override
             public void addDrink(ActionEvent e) {
                 // TODO modify so it updates bill JTable
-                controller.addDrinkToBill(waiter, drinksPanel.getDrinks().get(e.getSource()), bill, billCommandsPanel.getBillPanel().getTotal());
+                controller.addDrinkToBill(waiter, drinksPanel.getDrinks().get(e.getSource()), bill);
+                controller.updateBillTable(bill, billCommandsPanel.getBillPanel().getModel(), billCommandsPanel.getBillPanel().getTotal());
+
+                JTable table = billCommandsPanel.getBillPanel().getTable();
+                int tablePreferredWidth = billCommandsPanel.getBillPanel().getScrollPane().getPreferredSize().width;
+                billCommandsPanel.getBillPanel().setJTableColumnsWidth(table,tablePreferredWidth, 52, 16, 16, 16);
             }
         });
     }

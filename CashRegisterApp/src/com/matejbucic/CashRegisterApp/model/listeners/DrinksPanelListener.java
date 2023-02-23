@@ -2,6 +2,6 @@ package com.matejbucic.CashRegisterApp.model.listeners;
 
 import java.awt.event.ActionEvent;
 
-public interface DrinksListener {
+public interface DrinksPanelListener {
     void addDrink(ActionEvent e);
 }

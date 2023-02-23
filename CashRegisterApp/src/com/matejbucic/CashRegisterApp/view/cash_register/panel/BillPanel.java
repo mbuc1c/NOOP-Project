@@ -36,14 +36,15 @@ public class BillPanel extends JPanel {
         model.setColumnIdentifiers(columnIdentifiers);
         scrollPane = new JScrollPane(table);
         setJTableColumnsWidth(table, scrollPane.getPreferredSize().width, 52, 16, 16, 16);
+        table.setFont(new Font(Font.DIALOG, Font.PLAIN, 24));
 
 
-        total = new JLabel("Total: 0 \u20AC");
+        total = new JLabel("Total: 0.00 \u20AC");
         total.setFont(new Font(Font.DIALOG, Font.BOLD, 48));
     }
 
     // ref: https://www.codejava.net/java-se/swing/setting-column-width-and-row-height-for-jtable
-    private void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
+    public void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
                                              double... percentages) {
         double total = 0;
         for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
@@ -55,5 +56,7 @@ public class BillPanel extends JPanel {
             column.setPreferredWidth((int)
                     (tablePreferredWidth * (percentages[i] / total)));
         }
+
+        table.setRowHeight(80);
     }
 }
