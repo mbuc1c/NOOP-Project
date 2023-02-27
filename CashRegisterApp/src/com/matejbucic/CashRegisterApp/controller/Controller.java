@@ -9,7 +9,16 @@ import com.matejbucic.CashRegisterApp.view.login_form.LoginFrame;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.Set;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class Controller {
 
@@ -28,7 +37,7 @@ public class Controller {
         passwordField.setText("");
     }
 
-    public boolean isLoginValid(String password) {
+    public boolean isLoginValid(String password) throws SQLException {
         // currently for testing purposes
         if (!database.checkIfValid(password)) {
             JOptionPane.showMessageDialog(null, "Incorrect password!");
@@ -37,11 +46,11 @@ public class Controller {
         return true;
     }
 
-    public Waiter getWaiterWithPassword(String password) {
+    public Waiter getWaiterWithPassword(String password) throws SQLException {
         return database.getWaiterWithPassword(password);
     }
 
-    public boolean checkIsRegistrationValid(String name, String surname, String password, String repPassword) {
+    public boolean checkIsRegistrationValid(String name, String surname, String password, String repPassword) throws SQLException {
         if (name.equals("") || surname.equals("") || password.equals("")) {
             JOptionPane.showMessageDialog(null, "All fields must be filled!", "Warning!", JOptionPane.WARNING_MESSAGE);
             return false;
@@ -74,7 +83,7 @@ public class Controller {
         return true;
     }
 
-    public void addWaiter(Waiter waiter) {
+    public void addWaiter(Waiter waiter) throws SQLException {
         database.addWaiterToDatabase(waiter);
     }
 
@@ -89,11 +98,11 @@ public class Controller {
         new LoginFrame();
     }
 
-    public void addDrinkToBill(Waiter waiter, Drink drink, Bill bill) {
+    public void addDrinkToBill(Drink drink, Bill bill) {
         // TODO: when pressing checkout setWaiter
-        if (bill.getWaiter() == null) {
-            bill.setWaiter(waiter);
-        }
+//        if (bill.getWaiter() == null) {
+//            bill.setWaiter(waiter);
+//        }
         if (!bill.getDrinks().containsKey(drink)) {
             bill.getDrinks().put(drink, 1);
         } else {
@@ -148,5 +157,41 @@ public class Controller {
         Set<Drink> keySet = bill.getDrinks().keySet();
         Drink[] keyArray = keySet.toArray(new Drink[keySet.size()]);
         return keyArray[selectedRow];
+    }
+
+    // ref: https://www.javatpoint.com/java-create-pdf
+    public void checkoutBill(Bill bill, Waiter waiter) {
+        bill.setWaiter(waiter);
+        bill.setDate(new Date(System.currentTimeMillis()));
+        String fileName = waiter.getName() + waiter.getSurname() + "-" + bill.getDate();
+
+        //created PDF document instance
+        Document document = new Document();
+
+        try {
+            //generate a PDF at the specified location
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("bill_log/" + fileName + ".pdf"));
+
+            //opens the PDF
+            document.open();
+
+            //adds paragraph to the PDF file
+            document.add(new Paragraph(bill.toString()));
+
+            //close the PDF file
+            document.close();
+            //closes the writer
+            writer.close();
+        } catch (DocumentException | FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            database.addBillToDB(bill);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        new LoginFrame();
     }
 }

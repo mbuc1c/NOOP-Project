@@ -10,7 +10,6 @@ import lombok.Setter;
 public class Waiter {
 
     private int id;
-    private static int cnt = 1; // will be removed with database auto-incrementation
     private String name;
     private String surname;
     private String password;
@@ -19,8 +18,10 @@ public class Waiter {
         this.name = name;
         this.surname = surname;
         this.password = password;
-        id = cnt;
-        cnt++;
+    }
+
+    public Waiter() {
+
     }
 
     @Override

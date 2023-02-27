@@ -5,8 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
-import java.util.HashMap;
+import java.sql.Date;
 import java.util.LinkedHashMap;
 
 @Getter

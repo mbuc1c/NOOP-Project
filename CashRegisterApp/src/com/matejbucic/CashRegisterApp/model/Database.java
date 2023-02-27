@@ -3,6 +3,7 @@ package com.matejbucic.CashRegisterApp.model;
 import lombok.Getter;
 
 import javax.swing.*;
+import java.sql.*;
 import java.util.ArrayList;
 
 /*
@@ -13,30 +14,96 @@ TODO: Connect it with remote database
 public class Database {
 
     public static ArrayList<Waiter> waiters;
+    Connection con;
 
     public Database() {
     }
 
-    public boolean checkIfValid(String password) {
-        for (Waiter waiter: waiters) {
-            if (waiter.getPassword().equals(password)) {
-                return true;
-            }
+    public void connect() throws SQLException {
+        System.out.println("Connecting to database...");
+        try {
+            // load driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            // obtain connection
+            String url = "jdbc:mysql://db4free.net:3306/cashregisterdb"; // your database
+            String user = "mbuc1c"; // your username
+            String password = "noop1234"; // your password
+            con = DriverManager.getConnection(url, user, password);
+            System.out.println("Connected to -> " + con.toString());
+        } catch (ClassNotFoundException e) {
+            System.out.println("Could not load driver!!!");
         }
-        return false;
     }
 
-    public Waiter getWaiterWithPassword(String password) {
-        for (Waiter waiter: waiters) {
-            if (waiter.getPassword().equals(password)) {
-                return waiter;
-            }
-        }
-        return null;
+    public void disconnect() throws SQLException {
+        con.close();
+        System.out.println("Disconnected from DB....");
     }
 
-    public void addWaiterToDatabase(Waiter waiter) {
-        this.waiters.add(waiter);
-        System.out.println(waiter.toString());
+    public boolean checkIfValid(String password) throws SQLException {
+        connect();
+        PreparedStatement statement = con.prepareStatement
+                ("SELECT * FROM waiters WHERE password = ?");
+        statement.setString(1, password);
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            disconnect();
+            return true;
+        } else {
+            disconnect();
+            return false;
+        }
+    }
+
+    public Waiter getWaiterWithPassword(String password) throws SQLException {
+        Waiter waiter = new Waiter();
+        connect();
+        PreparedStatement statement = con.prepareStatement
+                ("SELECT * FROM waiters WHERE password=?");
+        statement.setString(1, password);
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            waiter.setId(resultSet.getInt(1));
+            waiter.setName(resultSet.getString(2));
+            waiter.setSurname(resultSet.getString(3));
+            waiter.setPassword(resultSet.getString(4));
+        }
+        disconnect();
+        return waiter;
+    }
+
+    public void addWaiterToDatabase(Waiter waiter) throws SQLException {
+        connect();
+        if (con != null) {
+            try {
+                PreparedStatement statement = con.prepareStatement
+                        ("INSERT INTO waiters (name, surname, password) VALUES (?, ?, ?)");
+                statement.setString(1, waiter.getName());
+                statement.setString(2, waiter.getSurname());
+                statement.setString(3, waiter.getPassword());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        disconnect();
+    }
+
+
+    public void addBillToDB(Bill bill) throws SQLException {
+        connect();
+        if (con != null) {
+            try {
+                PreparedStatement statement = con.prepareStatement
+                        ("INSERT INTO bills (waiter_id, total, date) VALUES (?, ?, ?)");
+                statement.setInt(1, bill.getWaiter().getId());
+                statement.setDouble(2, bill.getTotalPrice());
+                statement.setDate(3, bill.getDate());
+                statement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        disconnect();
     }
 }

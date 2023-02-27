@@ -80,8 +80,8 @@ public class CashRegisterFrame extends JFrame {
             @Override
             public void checkout() {
                 System.out.println(bill.toString());
+                controller.checkoutBill(bill, waiter);
                 dispose();
-                new LoginFrame();
             }
         });
     }
@@ -91,7 +91,7 @@ public class CashRegisterFrame extends JFrame {
             @Override
             public void addDrink(ActionEvent e) {
                 // TODO modify so it updates bill JTable
-                controller.addDrinkToBill(waiter, drinksPanel.getDrinks().get(e.getSource()), bill);
+                controller.addDrinkToBill(drinksPanel.getDrinks().get(e.getSource()), bill);
                 controller.updateBillTable(bill, billCommandsPanel.getBillPanel().getModel(), billCommandsPanel.getBillPanel().getTotal());
 
                 JTable table = billCommandsPanel.getBillPanel().getTable();

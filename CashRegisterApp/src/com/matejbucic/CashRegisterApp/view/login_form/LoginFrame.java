@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
 
 public class LoginFrame extends JFrame {
 
@@ -60,7 +61,7 @@ public class LoginFrame extends JFrame {
             }
 
             @Override
-            public void submit() {
+            public void submit() throws SQLException {
                 String password = new String(inputPanel.getPasswordField().getPassword());
                 if (controller.isLoginValid(password)) {
                     Waiter waiter = controller.getWaiterWithPassword(password);

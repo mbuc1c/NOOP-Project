@@ -9,6 +9,7 @@ import com.matejbucic.CashRegisterApp.view.register_form.panel.RegisterButtonsPa
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 public class RegisterFrame extends JFrame {
 
@@ -38,13 +39,17 @@ public class RegisterFrame extends JFrame {
             }
 
             @Override
-            public void submit() {
+            public void submit() throws SQLException {
                 String name = dataInputPanel.getNameField().getText();
                 String surname = dataInputPanel.getSurnameField().getText();
                 String password = new String(dataInputPanel.getPasswordField().getPassword());
                 String repPassword = new String(dataInputPanel.getRepeatPasswordField().getPassword());
                 if (controller.checkIsRegistrationValid(name, surname, password, repPassword)) {
-                    controller.addWaiter(new Waiter(name, surname, password));
+                    try {
+                        controller.addWaiter(new Waiter(name, surname, password));
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
                     dispose();
                     new LoginFrame();
                 }

@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 @Getter
 @Setter
@@ -33,7 +34,11 @@ public class KeyBoardPanel extends JPanel {
         });
 
         btnSubmit.addActionListener(e -> {
-            listener.submit();
+            try {
+                listener.submit();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
 

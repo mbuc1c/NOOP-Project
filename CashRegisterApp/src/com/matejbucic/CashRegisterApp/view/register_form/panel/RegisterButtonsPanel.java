@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
 
 @Getter
 @Setter
@@ -28,7 +29,11 @@ public class RegisterButtonsPanel extends JPanel {
         });
 
         submit.addActionListener(e -> {
-            listener.submit();
+            try {
+                listener.submit();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
 
