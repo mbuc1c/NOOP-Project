@@ -4,6 +4,7 @@ import com.matejbucic.CashRegisterApp.model.Bill;
 import com.matejbucic.CashRegisterApp.model.Database;
 import com.matejbucic.CashRegisterApp.model.Waiter;
 import com.matejbucic.CashRegisterApp.model.drinks.Drink;
+import com.matejbucic.CashRegisterApp.view.all_bills.AllBillsFrame;
 import com.matejbucic.CashRegisterApp.view.cash_register.CashRegisterFrame;
 import com.matejbucic.CashRegisterApp.view.login_form.LoginFrame;
 
@@ -13,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Set;
 
 import com.itextpdf.text.Document;
@@ -67,7 +69,7 @@ public class Controller {
             JOptionPane.showMessageDialog(null, "Repeated password does not match first inputted password!", "Warning!", JOptionPane.WARNING_MESSAGE);
             return false;
 
-        } else if (database.getWaiterWithPassword(password) != null) {
+        } else if (database.getWaiterWithPassword(password).getPassword() != null) {
             JOptionPane.showMessageDialog(null, "Waiter with that password already exists", "Warning!", JOptionPane.WARNING_MESSAGE);
             return false;
 
@@ -99,10 +101,6 @@ public class Controller {
     }
 
     public void addDrinkToBill(Drink drink, Bill bill) {
-        // TODO: when pressing checkout setWaiter
-//        if (bill.getWaiter() == null) {
-//            bill.setWaiter(waiter);
-//        }
         if (!bill.getDrinks().containsKey(drink)) {
             bill.getDrinks().put(drink, 1);
         } else {
@@ -162,15 +160,15 @@ public class Controller {
     // ref: https://www.javatpoint.com/java-create-pdf
     public void checkoutBill(Bill bill, Waiter waiter) {
         bill.setWaiter(waiter);
-        bill.setDate(new Date(System.currentTimeMillis()));
-        String fileName = waiter.getName() + waiter.getSurname() + "-" + bill.getDate();
+        bill.setDate(new Timestamp(System.currentTimeMillis()));
+        String fileName = waiter.getName() + waiter.getSurname() + "-" + bill.getDate().getTime();
 
         //created PDF document instance
         Document document = new Document();
 
         try {
             //generate a PDF at the specified location
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("bill_log/" + fileName + ".pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("bill_log\\" + fileName + ".pdf"));
 
             //opens the PDF
             document.open();
@@ -193,5 +191,16 @@ public class Controller {
         }
 
         new LoginFrame();
+    }
+
+    public void openAllBills(Waiter waiter) {
+        AllBillsFrame frame = new AllBillsFrame();
+        frame.setWaiter(waiter);
+        frame.setTitle("All bills - " + waiter.getName() + " " + waiter.getSurname());
+        try {
+            frame.getAllBillsTablePanel().getTable().setModel(database.getAllBillsTableModel(waiter));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

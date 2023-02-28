@@ -10,7 +10,6 @@ import com.matejbucic.CashRegisterApp.model.listeners.InformationPanelListener;
 import com.matejbucic.CashRegisterApp.view.cash_register.panel.BillCommandsPanel;
 import com.matejbucic.CashRegisterApp.view.cash_register.panel.DrinksPanel;
 import com.matejbucic.CashRegisterApp.view.cash_register.panel.InformationPanel;
-import com.matejbucic.CashRegisterApp.view.login_form.LoginFrame;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -90,7 +89,6 @@ public class CashRegisterFrame extends JFrame {
         drinksPanel.setListener(new DrinksPanelListener() {
             @Override
             public void addDrink(ActionEvent e) {
-                // TODO modify so it updates bill JTable
                 controller.addDrinkToBill(drinksPanel.getDrinks().get(e.getSource()), bill);
                 controller.updateBillTable(bill, billCommandsPanel.getBillPanel().getModel(), billCommandsPanel.getBillPanel().getTotal());
 
@@ -111,8 +109,7 @@ public class CashRegisterFrame extends JFrame {
 
             @Override
             public void allBills() {
-                // TODO: display frame with all current workers bills
-                System.out.println(bill.toString());
+                controller.openAllBills(waiter);
             }
         });
     }

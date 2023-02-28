@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.LinkedHashMap;
 
 @Getter
@@ -16,7 +16,7 @@ public class Bill {
     private LinkedHashMap<Drink, Integer> drinks;
     private double totalPrice = 0;
     private Waiter waiter;
-    private Date date;
+    private Timestamp date;
 
 
     public Bill() {

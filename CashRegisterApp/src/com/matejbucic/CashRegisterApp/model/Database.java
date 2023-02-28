@@ -3,8 +3,11 @@ package com.matejbucic.CashRegisterApp.model;
 import lombok.Getter;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /*
 this is a class that simulates database for testing purposes.
@@ -98,12 +101,45 @@ public class Database {
                         ("INSERT INTO bills (waiter_id, total, date) VALUES (?, ?, ?)");
                 statement.setInt(1, bill.getWaiter().getId());
                 statement.setDouble(2, bill.getTotalPrice());
-                statement.setDate(3, bill.getDate());
+                statement.setTimestamp(3, bill.getDate());
                 statement.executeUpdate();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
         disconnect();
+    }
+
+    public DefaultTableModel getAllBillsTableModel(Waiter waiter) throws SQLException {
+        DefaultTableModel model = new DefaultTableModel();
+        Vector<String> columnIdentifiers = new Vector<>();
+        Vector<Vector<String>> data = new Vector<>();
+
+        columnIdentifiers.add("ID");
+        columnIdentifiers.add("Total");
+        columnIdentifiers.add("Date");
+
+        connect();
+        if (con != null) {
+            try {
+                PreparedStatement statement = con.prepareStatement
+                        ("SELECT * FROM bills WHERE waiter_id=?");
+                statement.setInt(1, waiter.getId());
+                ResultSet resultSet = statement.executeQuery();
+
+                while (resultSet.next()) {
+                    Vector<String> row = new Vector<>();
+                    row.add(String.valueOf(resultSet.getInt(1)));
+                    row.add(String.valueOf(resultSet.getDouble(3)));
+                    row.add(String.valueOf(resultSet.getTimestamp(4)));
+                    data.add(row);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        disconnect();
+        model.setDataVector(data, columnIdentifiers);
+        return model;
     }
 }
