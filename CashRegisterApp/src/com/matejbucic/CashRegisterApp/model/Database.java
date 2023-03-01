@@ -2,21 +2,13 @@ package com.matejbucic.CashRegisterApp.model;
 
 import lombok.Getter;
 
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Vector;
 
-/*
-this is a class that simulates database for testing purposes.
-TODO: Connect it with remote database
- */
 @Getter
 public class Database {
 
-    public static ArrayList<Waiter> waiters;
     Connection con;
 
     public Database() {
